@@ -1,0 +1,23 @@
+{
+    "name": "ampersa/json-signer",
+    "description": "Validate JSON strings with a signed hash",
+    "version": "1.0",
+    "license": "MIT",
+    "authors" : [
+        {
+            "name": "Adam Prickett",
+            "email": "adam.prickett@ampersa.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ampersa\\JsonSigner\\": "src/"
+        }
+    }
+}
