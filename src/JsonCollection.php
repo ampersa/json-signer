@@ -27,6 +27,8 @@
  */
 namespace Ampersa\JsonSigner;
 
+use InvalidArgumentException;
+
 class JsonCollection
 {
     protected $items = [];
@@ -36,14 +38,20 @@ class JsonCollection
      * Array or valid JSON String
      * @param string|array|object|JsonCollection $input
      */
-    public function __construct($input)
+    public function __construct($input = null)
     {
         if ($input instanceof JsonCollection) {
             $this->items = $input->all();
         } else if (is_object($input) or is_array($input)) {
             $this->items = (array) $input;
-        } else if (json_decode($input) !== false) {
-            $this->items = json_decode($input, true);
+        } else if (is_string($input)) {
+            $decoded = json_decode($input, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new InvalidArgumentException('The string provided is not valid JSON');
+            }
+
+            $this->items = $decoded;
         }
     }
 
@@ -54,6 +62,15 @@ class JsonCollection
     public function all()
     {
         return $this->toArray();
+    }
+
+    /**
+     * Returns a count of the Collection items (top-level)
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->items);
     }
 
     /**

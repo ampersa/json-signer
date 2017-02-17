@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Ampersa\JsonSigner\Signer;
 
-class JsonSignerTest extends TestCase
+class SignerTest extends TestCase
 {
     /**
      * Test that the signer correctly signs a JSON string
@@ -123,6 +123,6 @@ class JsonSignerTest extends TestCase
         $this->expectException(Exception::class);
 
         $signer = new Signer('SIGNINGKEY');
-        $signed = $signer->sign('{"key1":"value1","array1":{"key2":"value2","key3":"value3"},"__s":"testing"}');
+        $signer->sign('{"key1":"value1","array1":{"key2":"value2","key3":"value3"},"__s":"testing"}');
     }
 }
