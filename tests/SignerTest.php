@@ -118,11 +118,32 @@ class SignerTest extends TestCase
         $this->assertTrue($signed);
     }
 
+    /**
+     * Test that the Signer will throw an Exception if the signature key already exists to prevent collision
+     * @return void
+     */
     public function testExceptionThrownBeforeCollision()
     {
         $this->expectException(Exception::class);
 
         $signer = new Signer('SIGNINGKEY');
         $signer->sign('{"key1":"value1","array1":{"key2":"value2","key3":"value3"},"__s":"testing"}');
+    }
+
+    /**
+     * Test that the Signer sorts the keys and so is order independent
+     * @return void
+     */
+    public function testSignerIsOrderIndependent()
+    {
+        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+        $signer = new Signer('123456789');
+        $signed = $signer->signature($json);
+
+        $json2 = json_encode(['array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key1' => 'value1', 'key2' => 'value2']);
+        $signer2 = new Signer('123456789');
+        $signed2 = $signer2->signature($json2);
+
+        $this->assertEquals($signed, $signed2);
     }
 }
