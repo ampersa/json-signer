@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Ampersa\JsonSigner\JsonCollection;
+use Ampersa\JsonSigner\Support\JsonCollection;
 
 class JsonCollectionTest extends TestCase
 {

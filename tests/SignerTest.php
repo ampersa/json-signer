@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Ampersa\JsonSigner\Signer;
+use Ampersa\JsonSigner\Signers\PackageSigner;
 
 class SignerTest extends TestCase
 {
@@ -145,5 +146,84 @@ class SignerTest extends TestCase
         $signed2 = $signer2->signature($json2);
 
         $this->assertEquals($signed, $signed2);
+    }
+
+    /**
+     * Test that the Signer accepts a third argument the change the Signer class used
+     * @return void
+     */
+    public function testSignerAcceptsSignerArgument()
+    {
+        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+
+        $signer = new Signer('123456789', 'sha256', new PackageSigner);
+
+        $signed = $signer->sign($json);
+
+        $this->assertEquals($signed, '{"__orig":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
+    }
+
+    /**
+     * Test that the Signer accepts a setSigner() function the change the Signer class used
+     * @return void
+     */
+    public function testSignerAcceptsSetSignerFunction()
+    {
+        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+
+        $signer = (new Signer('123456789'))
+                    ->setSigner(new PackageSigner);
+
+        $signed = $signer->sign($json);
+
+        $this->assertEquals($signed, '{"__orig":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
+    }
+
+    /**
+     * Test that Signer classes can be access directly
+     * @return void
+     */
+    public function testSignerDirectAccess()
+    {
+        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+
+        $signer = new PackageSigner('123456789');
+
+        $signed = $signer->sign($json);
+
+        $this->assertEquals($signed, '{"__orig":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
+    }
+
+    /**
+     * Test that Signer classes can be access directly
+     * @return void
+     */
+    public function testPackageSignerAllowsPackageKeyChange()
+    {
+        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+
+        $signer = (new Signer('123456789'))
+                    ->setSigner(new PackageSigner)
+                    ->setPackageKey('__package');
+
+        $signed = $signer->sign($json);
+
+        $this->assertEquals($signed, '{"__package":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
+    }
+
+    /**
+     * Test that Signer classes can be access directly
+     * @return void
+     */
+    public function testPackageSignerAllowsPackageKeyChangeDirect()
+    {
+        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+
+        $signer = (new PackageSigner('123456789'))
+                    ->setPackageKey('__package');
+
+        $signed = $signer->sign($json);
+
+        $this->assertEquals($signed, '{"__package":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
     }
 }

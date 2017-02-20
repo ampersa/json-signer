@@ -1,7 +1,7 @@
 {
     "name": "ampersa/json-signer",
     "description": "Validate JSON strings with a signed hash",
-    "version": "1.1",
+    "version": "1.2",
     "license": "MIT",
     "authors" : [
         {

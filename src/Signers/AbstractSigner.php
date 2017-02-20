@@ -25,14 +25,11 @@
  * @author Adam Prickett <adam.prickett@ampersa.co.uk>
  * @license MIT
  */
-namespace Ampersa\JsonSigner;
+namespace Ampersa\JsonSigner\Signers;
 
-use Exception;
-use InvalidArgumentException;
 use Ampersa\JsonSigner\Support\JsonCollection;
-use Ampersa\JsonSigner\Signers\SignerInterface;
 
-class Signer
+abstract class AbstractSigner
 {
     /** @var string */
     protected $signingKey;
@@ -43,66 +40,75 @@ class Signer
     /** @var string The key to use for the signature within the JSON string */
     protected $signatureKey = '__s';
 
-    /** @var SignerInterface */
-    public $signer = Signers\AppendSigner::class;
-    
     /**
      * Construct the signer and set the signing key, if provided
      * @param string|null $signingKey
      */
-    public function __construct($signingKey = null, $hashAlgo = 'sha256', SignerInterface $signerClass = null)
+    public function __construct($signingKey = null, $hashAlgo = 'sha256')
     {
         $this->signingKey = $signingKey;
         $this->hashAlgo = $hashAlgo;
-
-        if (empty($signerClass)) {
-            $signerClass = new $this->signer($signingKey, $hashAlgo);
-        }
-
-        $this->initializeSigner($signerClass);
     }
 
     /**
-     *
-     * @param Signer $signerClass
+     * Sign a JSON string and return the signature, rather than the signed JSON
+     * @param  string $json
+     * @return string
      */
-    public function setSigner(SignerInterface $signerClass)
+    public function signature($json)
     {
-        $this->initializeSigner($signerClass);
+        $collection = new JsonCollection($json);
+
+        // Lose the signature field, if exists, and sort by top-level keys, ascending
+        $collection->forget($this->signatureKey)->sortKeys();
+
+        $signature = $this->createSignature($collection->toJson());
+
+        return $signature;
+    }
+
+    /**
+     * Utility method to set the signing key
+     * @param string $signingKey
+     */
+    public function setSigningKey($key)
+    {
+        $this->signingKey = $key;
 
         return $this;
     }
 
     /**
-     * Call argument
-     * @param  string $function
-     * @param  array  $arguments
-     * @return mixed
+     * Utility method to set the hash algorithm
+     * @param string $hashAlgo
      */
-    public function __call($function, $arguments)
+    public function setAlgorithm($hashAlgo)
     {
-        if (method_exists($this->signer, $function)) {
-            return call_user_func_array([$this->signer, $function], $arguments);
-        }
+        $this->hashAlgo = $hashAlgo;
+
+        return $this;
     }
 
     /**
-     * Initialize the signer class
-     * @param  class $signerClass
-     * @return void
+     * Set the signature key for the signed JSON string
+     * @param string $signatureKey
      */
-    protected function initializeSigner(SignerInterface $signerClass)
+    public function setSignatureKey($signatureKey)
     {
-        if ($signerClass instanceof SignerInterface) {
-            $this->signer = $signerClass;
-            $this->signer->setSigningKey($this->signingKey);
-            $this->signer->setAlgorithm($this->hashAlgo);
-        } else {
-            $this->signer = new $signerClass($this->signingKey, $this->hashAlgo);
-            
-            if (!$this->signer instanceof SignerInterface) {
-                throw new Exception('Signer must be an instance of SignerInterface');
-            }
-        }
+        $this->signatureKey = $signatureKey;
+
+        return $this;
+    }
+
+    /**
+     * Create a hashed signature from a JSON string, signing key
+     * and hash method
+     *
+     * @param  string $json
+     * @return string
+     */
+    protected function createSignature($json)
+    {
+        return hash($this->hashAlgo, $json.$this->signingKey);
     }
 }

@@ -25,7 +25,7 @@
  * @author Adam Prickett <adam.prickett@ampersa.co.uk>
  * @license MIT
  */
-namespace Ampersa\JsonSigner;
+namespace Ampersa\JsonSigner\Support;
 
 use InvalidArgumentException;
 
@@ -117,6 +117,8 @@ class JsonCollection
     public function set($key, $value)
     {
         $this->items[$key] = $value;
+
+        return $this;
     }
 
     /**
