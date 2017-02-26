@@ -183,21 +183,6 @@ class SignerTest extends TestCase
      * Test that Signer classes can be access directly
      * @return void
      */
-    public function testSignerDirectAccess()
-    {
-        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
-
-        $signer = new PackageSigner('123456789');
-
-        $signed = $signer->sign($json);
-
-        $this->assertEquals($signed, '{"__orig":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
-    }
-
-    /**
-     * Test that Signer classes can be access directly
-     * @return void
-     */
     public function testPackageSignerAllowsPackageKeyChange()
     {
         $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
@@ -211,19 +196,12 @@ class SignerTest extends TestCase
         $this->assertEquals($signed, '{"__package":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
     }
 
-    /**
-     * Test that Signer classes can be access directly
-     * @return void
-     */
-    public function testPackageSignerAllowsPackageKeyChangeDirect()
+    public function testSignerMagicCallExceptionOnMissing()
     {
-        $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2']);
+        $this->expectException(Exception::class);
 
-        $signer = (new PackageSigner('123456789'))
-                    ->setPackageKey('__package');
+        $signer = new Signer;
+        $signer->nonExistentFunction();
 
-        $signed = $signer->sign($json);
-
-        $this->assertEquals($signed, '{"__package":{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"},"key2":"value2"},"__s":"f93a2481b14365e53e69399b3f0b5b950d3af1eaba039a2e8089c087af5f3cd1"}');
     }
 }

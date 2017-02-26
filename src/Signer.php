@@ -84,6 +84,8 @@ class Signer
         if (method_exists($this->signer, $function)) {
             return call_user_func_array([$this->signer, $function], $arguments);
         }
+
+        throw new Exception(sprintf('Method %s does not exist', $function));
     }
 
     /**
@@ -93,16 +95,8 @@ class Signer
      */
     protected function initializeSigner(SignerInterface $signerClass)
     {
-        if ($signerClass instanceof SignerInterface) {
-            $this->signer = $signerClass;
-            $this->signer->setSigningKey($this->signingKey);
-            $this->signer->setAlgorithm($this->hashAlgo);
-        } else {
-            $this->signer = new $signerClass($this->signingKey, $this->hashAlgo);
-            
-            if (!$this->signer instanceof SignerInterface) {
-                throw new Exception('Signer must be an instance of SignerInterface');
-            }
-        }
+        $this->signer = $signerClass;
+        $this->signer->setSigningKey($this->signingKey);
+        $this->signer->setAlgorithm($this->hashAlgo);
     }
 }

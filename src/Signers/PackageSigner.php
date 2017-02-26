@@ -28,6 +28,7 @@
 namespace Ampersa\JsonSigner\Signers;
 
 use Exception;
+use InvalidArgumentException;
 use Ampersa\JsonSigner\Support\JsonCollection;
 use Ampersa\JsonSigner\Signers\AbstractSigner;
 
