@@ -1,7 +1,7 @@
 # JSON Signer and Validator
 Signs JSON strings with a signed hash and validates signed strings.
 
-*Version 1.2*
+*Version 1.2.2*
 
 ## Installation
 Installation is via composer:
