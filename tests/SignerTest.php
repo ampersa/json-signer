@@ -125,7 +125,7 @@ class SignerTest extends TestCase
      */
     public function testExceptionThrownBeforeCollision()
     {
-        $this->expectException(Exception::class);
+        $this->setExpectedException(Exception::class);
 
         $signer = new Signer('SIGNINGKEY');
         $signer->sign('{"key1":"value1","array1":{"key2":"value2","key3":"value3"},"__s":"testing"}');
@@ -198,10 +198,9 @@ class SignerTest extends TestCase
 
     public function testSignerMagicCallExceptionOnMissing()
     {
-        $this->expectException(Exception::class);
+        $this->setExpectedException(Exception::class);
 
         $signer = new Signer;
         $signer->nonExistentFunction();
-
     }
 }

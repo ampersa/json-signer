@@ -57,7 +57,7 @@ class AppendSignerTest extends TestCase
      */
     public function testSignRequiresUnsignedJson()
     {
-        $this->expectException(Exception::class);
+        $this->setExpectedException(Exception::class);
 
         $json = json_encode(['key1' => 'value1', 'array1' => ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'], 'key2' => 'value2', '__s' => '1234567890']);
 
@@ -72,7 +72,7 @@ class AppendSignerTest extends TestCase
      */
     public function testVerifyRequiresSignedJson()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $signedJSON = '{"key1":"value1","array1":{"subkey1":"subvalue1","subkey2":"subvalue2","key2":"value2"}}';
 

@@ -1,7 +1,7 @@
 # JSON Signer and Validator
 Signs JSON strings with a signed hash and validates signed strings.
 
-*Version 1.2.2*
+*Version 1.3*
 
 ## Installation
 Installation is via composer:
@@ -77,7 +77,7 @@ $signed = $signer->sign('{"key1":"value1","array1":{"key2":"value2","key3":"valu
 ## Config
 
 ###Signature Key
-Set the key used to hold to signature in the signed string. This can be used to avoid collisions with existing keys. 
+Set the key used to hold to signature in the signed string. This can be used to avoid collisions with existing keys.
 
 **If sign() is called on a string which already contains the signature key, an Exception will be thrown**
 ```php

@@ -34,15 +34,16 @@ abstract class AbstractSigner
     /** @var string */
     protected $signingKey;
 
-    /** @var string A valid hash algorithm to be passed to hash() */
+    /** @var string  A valid hash algorithm to be passed to hash() */
     protected $hashAlgo;
 
-    /** @var string The key to use for the signature within the JSON string */
+    /** @var string  The key to use for the signature within the JSON string */
     protected $signatureKey = '__s';
 
     /**
      * Construct the signer and set the signing key, if provided
-     * @param string|null $signingKey
+     *
+     * @param string|null  $signingKey
      */
     public function __construct($signingKey = null, $hashAlgo = 'sha256')
     {
@@ -52,7 +53,8 @@ abstract class AbstractSigner
 
     /**
      * Sign a JSON string and return the signature, rather than the signed JSON
-     * @param  string $json
+     *
+     * @param  string  $json
      * @return string
      */
     public function signature($json)
@@ -69,7 +71,9 @@ abstract class AbstractSigner
 
     /**
      * Utility method to set the signing key
-     * @param string $signingKey
+     *
+     * @param  string  $signingKey
+     * @return self
      */
     public function setSigningKey($key)
     {
@@ -80,7 +84,9 @@ abstract class AbstractSigner
 
     /**
      * Utility method to set the hash algorithm
+     *
      * @param string $hashAlgo
+     * @return self
      */
     public function setAlgorithm($hashAlgo)
     {
@@ -91,7 +97,9 @@ abstract class AbstractSigner
 
     /**
      * Set the signature key for the signed JSON string
-     * @param string $signatureKey
+     *
+     * @param  string  $signatureKey
+     * @return self
      */
     public function setSignatureKey($signatureKey)
     {
@@ -104,7 +112,7 @@ abstract class AbstractSigner
      * Create a hashed signature from a JSON string, signing key
      * and hash method
      *
-     * @param  string $json
+     * @param  string  $json
      * @return string
      */
     protected function createSignature($json)

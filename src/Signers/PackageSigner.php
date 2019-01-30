@@ -30,11 +30,10 @@ namespace Ampersa\JsonSigner\Signers;
 use Exception;
 use InvalidArgumentException;
 use Ampersa\JsonSigner\Support\JsonCollection;
-use Ampersa\JsonSigner\Signers\AbstractSigner;
 
 class PackageSigner extends AbstractSigner implements SignerInterface
 {
-    /** @var string The key used to package the original JSON string */
+    /** @var string  The key used to package the original JSON string */
     protected $packageKey = '__orig';
 
     /**
@@ -54,8 +53,8 @@ class PackageSigner extends AbstractSigner implements SignerInterface
         $originalCollection = clone $collection;
 
         $collection = (new JsonCollection())
-                        ->set($this->packageKey, $originalCollection->toArray())
-                        ->set($this->signatureKey, $this->signature($originalCollection));
+            ->set($this->packageKey, $originalCollection->toArray())
+            ->set($this->signatureKey, $this->signature($originalCollection));
 
         return $collection->toJson();
     }
@@ -69,24 +68,21 @@ class PackageSigner extends AbstractSigner implements SignerInterface
      */
     public function verify($json, $signature = null)
     {
-        $collection = new JsonCollection(json_decode($json));
+        $collection = new JsonCollection($json);
 
-        if (!$collection->exists($this->signatureKey) and empty($signature)) {
+        if (!$collection->exists($this->signatureKey) && empty($signature)) {
             throw new InvalidArgumentException('The provided JSON is not signed');
         }
 
-        $ProvidedSignature = $signature;
-
         if (empty($signature)) {
-            $ProvidedSignature = $collection->get($this->signatureKey);
+            $signature = $collection->get($this->signatureKey);
         }
 
-        $tempCollection = (new JsonCollection($collection->get($this->packageKey)))
-                            ->sortKeys();
+        $tempCollection = (new JsonCollection($collection->get($this->packageKey)));
 
-        $SignatureActual = $this->createSignature($tempCollection->toJson());
+        $signatureActual = $this->createSignature($tempCollection->sortKeys()->toJson());
 
-        return $ProvidedSignature === $SignatureActual;
+        return $signature === $signatureActual;
     }
 
     /**

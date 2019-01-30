@@ -28,8 +28,6 @@
 namespace Ampersa\JsonSigner;
 
 use Exception;
-use InvalidArgumentException;
-use Ampersa\JsonSigner\Support\JsonCollection;
 use Ampersa\JsonSigner\Signers\SignerInterface;
 
 class Signer
@@ -37,46 +35,49 @@ class Signer
     /** @var string */
     protected $signingKey;
 
-    /** @var string A valid hash algorithm to be passed to hash() */
+    /** @var string  A valid hash algorithm to be passed to hash() */
     protected $hashAlgo;
 
-    /** @var string The key to use for the signature within the JSON string */
+    /** @var string  The key to use for the signature within the JSON string */
     protected $signatureKey = '__s';
 
-    /** @var SignerInterface */
+    /** @var \Ampersa\JsonSigner\Signers\SignerInterface */
     public $signer = Signers\AppendSigner::class;
-    
+
     /**
      * Construct the signer and set the signing key, if provided
-     * @param string|null $signingKey
+     *
+     * @param string|null  $signingKey
      */
-    public function __construct($signingKey = null, $hashAlgo = 'sha256', SignerInterface $signerClass = null)
+    public function __construct($signingKey = null, $hashAlgo = 'sha256', SignerInterface $signerInstance = null)
     {
         $this->signingKey = $signingKey;
         $this->hashAlgo = $hashAlgo;
 
-        if (empty($signerClass)) {
-            $signerClass = new $this->signer($signingKey, $hashAlgo);
+        if (empty($signerInstance)) {
+            $signerInstance = new $this->signer($signingKey, $hashAlgo);
         }
 
-        $this->initializeSigner($signerClass);
+        $this->initializeSigner($signerInstance);
     }
 
     /**
+     * Set the signing class instance
      *
-     * @param Signer $signerClass
+     * @param \Ampersa\JsonSigner\Signer  $instance
      */
-    public function setSigner(SignerInterface $signerClass)
+    public function setSigner(SignerInterface $instance)
     {
-        $this->initializeSigner($signerClass);
+        $this->initializeSigner($instance);
 
         return $this;
     }
 
     /**
      * Call argument
-     * @param  string $function
-     * @param  array  $arguments
+     *
+     * @param  string  $function
+     * @param  array   $arguments
      * @return mixed
      */
     public function __call($function, $arguments)
@@ -90,7 +91,8 @@ class Signer
 
     /**
      * Initialize the signer class
-     * @param  class $signerClass
+     *
+     * @param  \Ampersa\JsonSigner\Signers\SignerInterface  $signerClass
      * @return void
      */
     protected function initializeSigner(SignerInterface $signerClass)

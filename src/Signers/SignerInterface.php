@@ -48,18 +48,21 @@ interface SignerInterface
 
     /**
      * Utility method to set the signing key
+     *
      * @param string $signingKey
      */
     public function setSigningKey($key);
 
     /**
      * Utility method to set the hash algorithm
+     *
      * @param string $hashAlgo
      */
     public function setAlgorithm($hashAlgo);
 
     /**
      * Set the signature key for the signed JSON string
+     *
      * @param string $signatureKey
      */
     public function setSignatureKey($signatureKey);
