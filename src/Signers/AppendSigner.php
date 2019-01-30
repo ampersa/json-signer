@@ -30,14 +30,13 @@ namespace Ampersa\JsonSigner\Signers;
 use Exception;
 use InvalidArgumentException;
 use Ampersa\JsonSigner\Support\JsonCollection;
-use Ampersa\JsonSigner\Signers\AbstractSigner;
 
 class AppendSigner extends AbstractSigner implements SignerInterface
 {
     /**
      * Sign a JSON string
      *
-     * @param  string $json
+     * @param  string  $json
      * @return string
      */
     public function sign($json)
@@ -64,7 +63,7 @@ class AppendSigner extends AbstractSigner implements SignerInterface
     {
         $collection = new JsonCollection(json_decode($json));
 
-        if (!$collection->exists($this->signatureKey) and empty($signature)) {
+        if (!$collection->exists($this->signatureKey) && empty($signature)) {
             throw new InvalidArgumentException('The provided JSON is not signed');
         }
 
@@ -75,7 +74,7 @@ class AppendSigner extends AbstractSigner implements SignerInterface
         }
 
         $tempCollection = $collection->forget($this->signatureKey)->sortKeys();
-        
+
         $SignatureActual = $this->createSignature($tempCollection->toJson());
 
         return $ProvidedSignature === $SignatureActual;

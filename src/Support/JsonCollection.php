@@ -36,15 +36,16 @@ class JsonCollection
     /**
      * Construct the collection, accepting JsonCollection, Object,
      * Array or valid JSON String
-     * @param string|array|object|JsonCollection $input
+     *
+     * @param string|array|object|\Ampersa\JsonSigner\Support\JsonCollection  $input
      */
     public function __construct($input = null)
     {
         if ($input instanceof JsonCollection) {
             $this->items = $input->all();
-        } else if (is_object($input) or is_array($input)) {
+        } elseif (is_object($input) || is_array($input)) {
             $this->items = (array) $input;
-        } else if (is_string($input)) {
+        } elseif (is_string($input)) {
             $decoded = json_decode($input, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
@@ -57,6 +58,7 @@ class JsonCollection
 
     /**
      * Return all the Collections items
+     *
      * @return array
      */
     public function all()
@@ -66,6 +68,7 @@ class JsonCollection
 
     /**
      * Returns a count of the Collection items (top-level)
+     *
      * @return int
      */
     public function count()
@@ -75,7 +78,8 @@ class JsonCollection
 
     /**
      * Check whether a key exists on the Collection
-     * @param  string $key
+     *
+     * @param  string  $key
      * @return bool
      */
     public function exists($key)
@@ -85,7 +89,8 @@ class JsonCollection
 
     /**
      * Forget a key from the Collection
-     * @param  string $key
+     *
+     * @param  string  $key
      * @return self
      */
     public function forget($key)
@@ -97,7 +102,8 @@ class JsonCollection
 
     /**
      * Return a value for a key from the Collection
-     * @param  string $key
+     *
+     * @param  string  $key
      * @return mixed
      */
     public function get($key)
@@ -111,8 +117,9 @@ class JsonCollection
 
     /**
      * Set a value on the Collection for a key
-     * @param string $key
-     * @param mixed  $value
+     *
+     * @param string  $key
+     * @param mixed   $value
      */
     public function set($key, $value)
     {
@@ -123,7 +130,8 @@ class JsonCollection
 
     /**
      * Sort the collection by values
-     * @param  boolean $desc
+     *
+     * @param  bool  $desc
      * @return self
      */
     public function sort($desc = false)
@@ -139,7 +147,8 @@ class JsonCollection
 
     /**
      * Sort the collection by keys
-     * @param  boolean $desc
+     *
+     * @param  bool  $desc
      * @return self
      */
     public function sortKeys($desc = false)
@@ -155,6 +164,7 @@ class JsonCollection
 
     /**
      * Return the collection contents as JSON
+     *
      * @return string
      */
     public function toJson()
@@ -164,6 +174,7 @@ class JsonCollection
 
     /**
      * Return the collection contents as an Array
+     *
      * @return array
      */
     public function toArray()
@@ -173,6 +184,7 @@ class JsonCollection
 
     /**
      * Magic function to return JSON when requested as a string
+     *
      * @return string
      */
     public function __toString()
@@ -182,7 +194,8 @@ class JsonCollection
 
     /**
      * Magic function to retrieve a value from the collection
-     * @param  string $key
+     *
+     * @param  string  $key
      * @return mixed
      */
     public function __get($key)
@@ -192,8 +205,9 @@ class JsonCollection
 
     /**
      * Magic function to set a value on the collection
-     * @param string $key
-     * @param mixed  $value
+     *
+     * @param string  $key
+     * @param mixed   $value
      */
     public function __set($key, $value)
     {
@@ -202,6 +216,7 @@ class JsonCollection
 
     /**
      * Magic function to perform isset() on the collection
+     *
      * @param  string  $key
      * @return boolean
      */

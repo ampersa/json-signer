@@ -35,7 +35,7 @@ class JsonCollectionTest extends TestCase
      */
     public function testCollectionExceptsWithBadString()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $collection = new JsonCollection('{key1":"value1","key2":"value2","array1":{"subkey1":"subvalue1","subkey2":"subvalue2"}}');
     }
